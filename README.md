@@ -24,12 +24,16 @@ pnpm dev                     # http://localhost:3000
 
 ## Environment variables
 
-See `.env.example`. The quote form needs at least one delivery channel:
+See `.env.example`. The quote form needs one email provider (more than one can be set; every configured one is used):
 
-- Brevo: `BREVO_API_KEY`, `QUOTE_TO_EMAIL`, `QUOTE_FROM_EMAIL`
+- Brevo: `BREVO_API_KEY`
+- Resend: `RESEND_API_KEY`
+- Any SMTP mailbox: `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS`
 - Telegram (optional): `TELEGRAM_BOT_TOKEN`, `TELEGRAM_CHAT_ID`
 
-Set `NEXT_PUBLIC_SITE_URL` to the live domain (used for canonical URLs, sitemap and structured data).
+Also set `QUOTE_TO_EMAIL` and `QUOTE_FROM_EMAIL` (the sender must be verified with the provider).
+Set `NEXT_PUBLIC_SITE_URL` to the live domain (canonical URLs, sitemap and structured data).
+Optional: `GOOGLE_SITE_VERIFICATION` adds the Search Console verification tag.
 
 ## Deploying
 

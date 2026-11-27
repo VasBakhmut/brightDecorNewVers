@@ -42,6 +42,10 @@ export const metadata: Metadata = {
   twitter: { card: "summary_large_image", title, description, images: ["/og.jpg"] },
   robots: { index: true, follow: true, googleBot: { "max-image-preview": "large", "max-snippet": -1 } },
   formatDetection: { telephone: false },
+  verification: {
+    google: process.env.GOOGLE_SITE_VERIFICATION || undefined,
+    other: { "msvalidate.01": "EF0708005C6D7ABB43E456DF919321AC" },
+  },
 };
 
 export const viewport: Viewport = { themeColor: "#ffffff", width: "device-width", initialScale: 1 };
