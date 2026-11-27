@@ -83,6 +83,7 @@ const telegram = async (text: string): Promise<boolean | null> => {
     headers: { "content-type": "application/json" },
     body: JSON.stringify({ chat_id: chat, text }),
   });
+  if (!res.ok) console.error("[quote] telegram:", res.status, await res.text().catch(() => ""));
   return res.ok;
 };
 
