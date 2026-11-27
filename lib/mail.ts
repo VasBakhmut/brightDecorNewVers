@@ -48,6 +48,7 @@ const resend: Sender = async (m) => {
       html: m.html,
     }),
   });
+  if (!res.ok) console.error("[quote] resend:", res.status, await res.text().catch(() => ""));
   return res.ok;
 };
 
