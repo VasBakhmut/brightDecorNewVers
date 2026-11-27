@@ -39,7 +39,9 @@ export function QuoteForm() {
   const [errors, setErrors] = useState<Errors>({});
   const [status, setStatus] = useState<"idle" | "sending" | "done" | "error">("idle");
   const [serverError, setServerError] = useState("");
+  const [firstName, setFirstName] = useState("");
   const started = useRef(Date.now());
+  const box = useRef<HTMLDivElement>(null);
 
   const set = <K extends keyof Data>(k: K, v: Data[K]) => {
     setData((d) => ({ ...d, [k]: v }));
@@ -64,7 +66,10 @@ export function QuoteForm() {
         const j = await res.json().catch(() => ({}));
         throw new Error(j.error || "Something went wrong");
       }
+      setFirstName(data.name.trim().split(" ")[0]);
+      setData(EMPTY);
       setStatus("done");
+      requestAnimationFrame(() => box.current?.scrollIntoView({ behavior: "smooth", block: "center" }));
     } catch (err) {
       setServerError(err instanceof Error ? err.message : "Something went wrong");
       setStatus("error");
@@ -72,7 +77,7 @@ export function QuoteForm() {
   };
 
   return (
-    <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-sky-light to-sky-deep p-6 text-white shadow-[0_28px_60px_-28px_rgba(10,107,125,0.7)] sm:p-8 md:p-10">
+    <div ref={box} className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-sky-light to-sky-deep p-6 text-white shadow-[0_28px_60px_-28px_rgba(10,107,125,0.7)] sm:p-8 md:p-10">
       {/* decorative brush strokes */}
       <svg aria-hidden viewBox="0 0 300 120" className="pointer-events-none absolute -right-10 -top-6 h-32 w-72 text-white/15">
         <path d="M10 90 C 70 20, 150 110, 290 30" fill="none" stroke="currentColor" strokeWidth="14" strokeLinecap="round" />
@@ -85,10 +90,20 @@ export function QuoteForm() {
             <span className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-white text-sky md:mx-0">
               <IconCheck className="h-6 w-6" />
             </span>
-            <h3 className="mt-4 font-[family-name:var(--font-display)] text-2xl font-bold">Thank you, {data.name.split(" ")[0]}.</h3>
+            <h3 className="mt-4 font-[family-name:var(--font-display)] text-2xl font-bold">Thank you{firstName ? `, ${firstName}` : ""}.</h3>
             <p className="mt-2 text-white/90">
-              Your request is in. We will be in touch within one business day to arrange your quote. If it is urgent, call {SITE.phone}.
+              Your request has been sent. We will be in touch within one business day to arrange your quote. If it is urgent, call {SITE.phone}.
             </p>
+            <button
+              type="button"
+              onClick={() => {
+                started.current = Date.now();
+                setStatus("idle");
+              }}
+              className="mt-5 text-sm font-semibold underline underline-offset-4"
+            >
+              Send another request
+            </button>
           </motion.div>
         ) : (
           <motion.form key="form" onSubmit={submit} noValidate initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} aria-label="Request a quote" className="relative">
